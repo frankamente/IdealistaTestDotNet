@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using IdealistaTest.Infrastructure;
 
 namespace IdealistaTest
 {
@@ -16,6 +17,7 @@ namespace IdealistaTest
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FakeDatabase.Instance().InitializeDatabase();
         }
     }
 }

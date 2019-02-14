@@ -135,6 +135,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\FakeDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Infrastructure\jsonPopulateFiles\pictures.json" />
+    <Content Include="Infrastructure\jsonPopulateFiles\ads.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

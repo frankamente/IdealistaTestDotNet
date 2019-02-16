@@ -135,6 +135,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Entities\Ad.cs" />
+    <Compile Include="Infrastructure\Entities\Picture.cs" />
     <Compile Include="Infrastructure\FakeDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

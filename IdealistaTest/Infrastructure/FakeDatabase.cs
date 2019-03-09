@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using IdealistaTest.Infrastructure.Entities;
 using Newtonsoft.Json;
+using WebGrease.Css.Extensions;
 
 namespace IdealistaTest.Infrastructure
 {
@@ -12,10 +13,19 @@ namespace IdealistaTest.Infrastructure
     {
         private static volatile FakeDatabase instance;
 
-        private static readonly object InstanceLocker = new object();
-        private FakeDatabase()
-        {
+        private IEnumerable<Ad> infrastructureAds;
+        private IEnumerable<Picture> infrastructurePictures;
 
+        private static IList<Domain.Entities.Ad> domainAds;
+        private static IList<Domain.Entities.Picture> domainPictures;
+
+        private static readonly object InstanceLocker = new object();
+        protected FakeDatabase()
+        {
+            infrastructureAds = new List<Ad>();
+            infrastructurePictures = new List<Picture>();
+            domainAds = new List<Domain.Entities.Ad>();
+            domainPictures = new List<Domain.Entities.Picture>();
         }
 
         public static FakeDatabase Instance()
@@ -31,14 +41,47 @@ namespace IdealistaTest.Infrastructure
             return instance;
         }
 
-        public  void InitializeDatabase()
+        protected void RestartInstance()
         {
-            string adJsonFilename =
-                System.Web.Hosting.HostingEnvironment.MapPath(@"~/Infrastructure/jsonPopulateFiles/ads.json");
-            var ads = JsonConvert.DeserializeObject<List<Ad>>(File.ReadAllText(adJsonFilename));
-            string pictureJsonFilename =
-                System.Web.Hosting.HostingEnvironment.MapPath(@"~/Infrastructure/jsonPopulateFiles/pictures.json");
-            var pictures = JsonConvert.DeserializeObject<List<Picture>>(File.ReadAllText(pictureJsonFilename));
+            instance = new FakeDatabase();
+        }
+
+        public void InitializeDatabase(string adJsonFilename, string pictureJsonFilename)
+        {
+            if (adJsonFilename == null)
+            {
+                throw new FileLoadException("Error loading Ads Json");
+            }
+            if (pictureJsonFilename == null)
+            {
+                throw new FileLoadException("Error loading Picture Json");
+            }
+            InitializeInfrastructureEntities(adJsonFilename, pictureJsonFilename);
+            InitializeDomainAds();
+        }
+
+        private void InitializeDomainAds()
+        {
+            infrastructureAds.ForEach(infrastructureAd =>
+            {
+                domainAds.Add(new Domain.Entities.Ad(infrastructureAd, infrastructurePictures));
+            });
+        }
+
+        private void InitializeInfrastructureEntities(string adJsonFilename, string pictureJsonFilename)
+        {
+            infrastructureAds = JsonConvert.DeserializeObject<HashSet<Ad>>(File.ReadAllText(adJsonFilename));
+            infrastructurePictures = JsonConvert.DeserializeObject<HashSet<Picture>>(File.ReadAllText(pictureJsonFilename));
+        }
+
+        public IEnumerable<Domain.Entities.Ad> GetAds()
+        {
+            return domainAds;
+        }
+
+        public IEnumerable<Domain.Entities.Picture> GetPictures()
+        {
+            return domainPictures;
         }
     }
 }

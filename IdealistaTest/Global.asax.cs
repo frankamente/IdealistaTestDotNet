@@ -17,7 +17,11 @@ namespace IdealistaTest
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            FakeDatabase.Instance().InitializeDatabase();
+            var adJsonFilename =
+                System.Web.Hosting.HostingEnvironment.MapPath(@"~/Infrastructure/jsonPopulateFiles/ads.json");
+            var pictureJsonFilename =
+                System.Web.Hosting.HostingEnvironment.MapPath(@"~/Infrastructure/jsonPopulateFiles/pictures.json");
+            FakeDatabase.Instance().InitializeDatabase(adJsonFilename, pictureJsonFilename);
         }
     }
 }

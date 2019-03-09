@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IdealistaTest.Infrastructure.Entities
+namespace IdealistaTest.Domain.Entities
 {
     public class Picture
     {
-        public int Id { get; }
-        public string Url { get;}
-        public string Quality { get;}
+        public int Id { get; set; }
+        public string Url { get; set; }
+        public string Quality { get; set; }
 
         public override bool Equals(object obj)
         {

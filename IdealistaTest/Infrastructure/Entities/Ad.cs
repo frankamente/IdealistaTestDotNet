@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace IdealistaTest.Infrastructure.Entities
 {
@@ -11,6 +9,22 @@ namespace IdealistaTest.Infrastructure.Entities
         public string Description { get; set; }
         public int HouseSize { get; set; }
         public int GardenSize { get; set; }
-        public List<int> Pictures { get; set; }
+        public IEnumerable<int> Pictures { get; set; }
+
+        public override bool Equals(object obj)
+        {
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return ((Ad)obj).Id == Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

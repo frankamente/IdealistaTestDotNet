@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace IdealistaTest.Domain.Entities
+﻿namespace IdealistaTest.Domain.Entities
 {
     public class Picture
     {
         public int Id { get; set; }
         public string Url { get; set; }
-        public string Quality { get; set; }
+        public PictureQuality Quality { get; set; }
 
         public override bool Equals(object obj)
         {

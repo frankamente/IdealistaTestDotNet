@@ -1,47 +1,41 @@
 ﻿using FluentAssertions;
 using IdealistaTest.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
+using System.Linq;
 
 namespace IdealistaTest.DomainTests.Infrastructure
 {
     [TestClass]
     public class FakeDatabaseTest
     {
-        private const int AD_QUANTITY = 8;
+        private const int ADS_QUANTITY = 8;
+        private FakeDatabase fakeDatabase;
 
         [TestInitialize]
         public void TestInitialize()
         {
             new FakeDatabaseExtend().RestartFakeDatabaseInstance();
+            fakeDatabase = FakeDatabase.Instance();
         }
 
         [TestMethod]
         public void WhenNoDatabaseInitializeGetAdShouldReturnEmptyIEnumerable()
         {
-            var fakeDatabase = FakeDatabase.Instance();
-            fakeDatabase.GetAds().Should().BeEmpty();
-        }
-
-        [TestMethod]
-        public void WhenNoDatabaseInitializeGetPictureShouldReturnEmptyIEnumerable()
-        {
-            var fakeDatabase = FakeDatabase.Instance();
-            fakeDatabase.GetPictures().Should().BeEmpty();
+            fakeDatabase.GetOrderedAds().Should().BeEmpty();
         }
 
         [TestMethod]
         public void WhenDatabaseInitializeGetAdsShouldReturnNotEmptyIEnumerable()
         {
-            var fakeDatabase = FakeDatabase.Instance();
             fakeDatabase.InitializeDatabase(GetAdJsonFullPath(), GetPictureJsonFullPath());
-            fakeDatabase.GetAds().Should().NotBeEmpty();
+            fakeDatabase.GetOrderedAds().Should().NotBeEmpty();
         }
 
         [TestMethod]
         public void WhenInitializeDatabaseWithNullAdJsonFullPathShouldThrowFileLoadException()
         {
-            var fakeDatabase = FakeDatabase.Instance();
             fakeDatabase.Invoking(x => x.InitializeDatabase(null, GetPictureJsonFullPath()))
                 .Should().Throw<FileLoadException>();
         }
@@ -49,7 +43,6 @@ namespace IdealistaTest.DomainTests.Infrastructure
         [TestMethod]
         public void WhenInitializeDatabaseWithNullPictureJsonFullPathShouldThrowFileLoadException()
         {
-            var fakeDatabase = FakeDatabase.Instance();
             fakeDatabase.Invoking(x => x.InitializeDatabase(GetAdJsonFullPath(), null))
                 .Should().Throw<FileLoadException>();
         }
@@ -57,9 +50,23 @@ namespace IdealistaTest.DomainTests.Infrastructure
         [TestMethod]
         public void WhenDatabaseInitializeGetAdsShouldReturnAdsQuantityIEnumerable()
         {
-            var fakeDatabase = FakeDatabase.Instance();
             fakeDatabase.InitializeDatabase(GetAdJsonFullPath(), GetPictureJsonFullPath());
-            fakeDatabase.GetAds().Should().HaveCount(AD_QUANTITY);
+            fakeDatabase.GetOrderedAds().Should().HaveCount(ADS_QUANTITY);
+        }
+
+        [TestMethod]
+        public void WhenDatabaseInitializeGetAdsShouldReturnAdsWithDefaultIrrelevantDateAsDateTimeDefaultValue()
+        {
+            fakeDatabase.InitializeDatabase(GetAdJsonFullPath(), GetPictureJsonFullPath());
+            fakeDatabase.GetOrderedAds().Where(x => x.IrrelevantDate != DateTime.MinValue).Should().BeEmpty();
+        }
+
+        [TestMethod]
+        public void WhenDatabaseInitializeGetAdsShouldReturnAdsWithNullMarkDate()
+        {
+            fakeDatabase.GetOrderedAds().Where(
+                    x => x.IrrelevantDate != DateTime.MinValue)
+                .Should().BeEmpty();
         }
 
         private string GetJsonFullPath(string filename)

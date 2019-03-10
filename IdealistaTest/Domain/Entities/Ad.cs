@@ -1,19 +1,34 @@
-﻿using System;
+﻿using IdealistaTest.Domain.MarkFilters;
+using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Microsoft.Ajax.Utilities;
 
 namespace IdealistaTest.Domain.Entities
 {
     public class Ad
     {
+        private const int IRRELEVANT_AD_MARK = 40;
+
+        public int Id { get; }
+        public string Description { get; set; }
+        public Typology Typology { get; set; }
+        public int HouseSize { get; set; }
+        public int GardenSize { get; set; }
+        public IList<Picture> Pictures { get; }
+        public int Mark { get; set; }
+        public DateTime IrrelevantDate { get; private set; }
+
         public Ad(Infrastructure.Entities.Ad infrastructureAd, IEnumerable<Infrastructure.Entities.Picture> infrastructurePictures)
         {
             Id = infrastructureAd.Id;
             Description = infrastructureAd.Description;
             GardenSize = infrastructureAd.GardenSize;
             HouseSize = infrastructureAd.HouseSize;
+            if (Enum.TryParse(infrastructureAd.Typology, out Typology typology))
+            {
+                Typology = typology;
+            }
             Pictures = GetPicturesByInfrastructurePictures(GetInfrastructurePictures(infrastructureAd, infrastructurePictures));
         }
 
@@ -21,25 +36,28 @@ namespace IdealistaTest.Domain.Entities
         {
             return getInfrastructurePictures.Select(infrastructurePicture =>
             {
-                return new Picture
+                var picture = new Picture
                 {
-                    Id = infrastructurePicture.Id
+                    Id = infrastructurePicture.Id,
+                    Url = infrastructurePicture.Url
                 };
+                if (Enum.TryParse(infrastructurePicture.Quality, out PictureQuality pictureQuality))
+                {
+                    picture.Quality = pictureQuality;
+                }
+                return picture;
             }).ToList();
         }
 
         private static IEnumerable<Infrastructure.Entities.Picture> GetInfrastructurePictures(Infrastructure.Entities.Ad infrastructureAd, IEnumerable<Infrastructure.Entities.Picture> infrastructurePictures)
         {
-            return infrastructurePictures.Where(x => infrastructureAd.Id == x.Id);
-            //return infrastructurePictures.Where(adPictureId => GetInfrastructurePictureId(infrastructurePictures).Contains(adPictureId));
+            return infrastructurePictures.Where(x => infrastructureAd.Pictures.Contains(x.Id));
         }
 
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public int HouseSize { get; set; }
-        public int GardenSize { get; set; }
-        public IList<Picture> Pictures { get; set; }
-        public DateTime IrrelevantDate { get; set; }
+        public bool IsIrrelevant()
+        {
+            return Mark < IRRELEVANT_AD_MARK;
+        }
 
         public override bool Equals(object obj)
         {
@@ -55,6 +73,25 @@ namespace IdealistaTest.Domain.Entities
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        public void CalculateMark()
+        {
+            IList<IMarkFilter> markFilters = new List<IMarkFilter>
+            {
+                new NoPicturesMarkFilter(),
+                new NoDescriptionMarkFilter(),
+                new DescriptionSizeMarkFilter(),
+                new DescriptionKeyWordsMarkFilter(),
+                new IsCompleteMarkFilter(),
+                new PictureQualityMarkFilter()
+            };
+
+            markFilters.ForEach(x => x.CalculateMark(this));
+            if (IsIrrelevant())
+            {
+                IrrelevantDate = DateTime.Now;
+            }
         }
     }
 }

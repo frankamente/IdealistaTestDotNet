@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace IdealistaTest.Infrastructure.Entities
 {
@@ -7,6 +6,7 @@ namespace IdealistaTest.Infrastructure.Entities
     {
         public int Id { get; set; }
         public string Description { get; set; }
+        public string Typology { get; set; }
         public int HouseSize { get; set; }
         public int GardenSize { get; set; }
         public IEnumerable<int> Pictures { get; set; }

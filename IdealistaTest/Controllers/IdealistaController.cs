@@ -1,20 +1,17 @@
-﻿using System;
+﻿using IdealistaTest.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.Routing;
-using IdealistaTest.Services;
+using IdealistaTest.Infrastructure;
 
 namespace IdealistaTest.Controllers
 {
     public class IdealistaController : ApiController
     {
         [HttpGet]
-        public IEnumerable<string> MarkCalculation()
+        public IEnumerable<Domain.Entities.Ad> MarkCalculation()
         {
-            new IdealistaService();
-            return new[] { "value1", "value2" };
+            new IdealistaService().MarkCalculation();
+            return FakeDatabase.Instance().GetOrderedAds();
         }
     }
 }

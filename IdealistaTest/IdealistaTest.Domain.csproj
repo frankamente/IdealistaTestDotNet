@@ -134,9 +134,17 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\IdealistaController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Domain\Entities\Ad.cs" />
     <Compile Include="Domain\Entities\Picture.cs" />
+    <Compile Include="Domain\Entities\PictureQuality.cs" />
+    <Compile Include="Domain\Entities\Typology.cs" />
+    <Compile Include="Domain\MarkFilters\DescriptionKeyWordsMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\DescriptionSizeMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\IMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\IsCompleteMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\NoDescriptionMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\NoPicturesMarkFilter.cs" />
+    <Compile Include="Domain\MarkFilters\PictureQualityMarkFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -147,7 +155,6 @@
     <Compile Include="Services\IdealistaService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -159,8 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-    <Folder Include="Views\Idealista\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Infrastructure\jsonPopulateFiles\pictures.json" />

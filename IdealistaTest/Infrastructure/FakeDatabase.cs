@@ -1,10 +1,9 @@
-﻿using System;
+﻿using IdealistaTest.Infrastructure.Entities;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
-using IdealistaTest.Infrastructure.Entities;
-using Newtonsoft.Json;
+using System.Text;
 using WebGrease.Css.Extensions;
 
 namespace IdealistaTest.Infrastructure
@@ -17,7 +16,6 @@ namespace IdealistaTest.Infrastructure
         private IEnumerable<Picture> infrastructurePictures;
 
         private static IList<Domain.Entities.Ad> domainAds;
-        private static IList<Domain.Entities.Picture> domainPictures;
 
         private static readonly object InstanceLocker = new object();
         protected FakeDatabase()
@@ -25,7 +23,6 @@ namespace IdealistaTest.Infrastructure
             infrastructureAds = new List<Ad>();
             infrastructurePictures = new List<Picture>();
             domainAds = new List<Domain.Entities.Ad>();
-            domainPictures = new List<Domain.Entities.Picture>();
         }
 
         public static FakeDatabase Instance()
@@ -70,18 +67,13 @@ namespace IdealistaTest.Infrastructure
 
         private void InitializeInfrastructureEntities(string adJsonFilename, string pictureJsonFilename)
         {
-            infrastructureAds = JsonConvert.DeserializeObject<HashSet<Ad>>(File.ReadAllText(adJsonFilename));
-            infrastructurePictures = JsonConvert.DeserializeObject<HashSet<Picture>>(File.ReadAllText(pictureJsonFilename));
+            infrastructureAds = JsonConvert.DeserializeObject<HashSet<Ad>>(File.ReadAllText(adJsonFilename, Encoding.Default));
+            infrastructurePictures = JsonConvert.DeserializeObject<HashSet<Picture>>(File.ReadAllText(pictureJsonFilename, Encoding.Default));
         }
 
-        public IEnumerable<Domain.Entities.Ad> GetAds()
+        public IEnumerable<Domain.Entities.Ad> GetOrderedAds()
         {
-            return domainAds;
-        }
-
-        public IEnumerable<Domain.Entities.Picture> GetPictures()
-        {
-            return domainPictures;
+            return domainAds.OrderByDescending(x=>x.Mark);
         }
     }
 }

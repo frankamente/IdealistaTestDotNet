@@ -134,6 +134,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\IdealistaController.cs" />
+    <Compile Include="Domain\DateFormatConverter.cs" />
     <Compile Include="Domain\Entities\Ad.cs" />
     <Compile Include="Domain\Entities\Picture.cs" />
     <Compile Include="Domain\Entities\PictureQuality.cs" />

@@ -3,6 +3,7 @@ using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace IdealistaTest.Domain.Entities
 {
@@ -17,6 +18,7 @@ namespace IdealistaTest.Domain.Entities
         public int GardenSize { get; set; }
         public IList<Picture> Pictures { get; }
         public int Mark { get; set; }
+        [JsonConverter(typeof(DateFormatConverter), "dd/MM/yyyy:HH:mm")]
         public DateTime IrrelevantDate { get; private set; }
 
         public Ad(Infrastructure.Entities.Ad infrastructureAd, IEnumerable<Infrastructure.Entities.Picture> infrastructurePictures)
@@ -30,6 +32,11 @@ namespace IdealistaTest.Domain.Entities
                 Typology = typology;
             }
             Pictures = GetPicturesByInfrastructurePictures(GetInfrastructurePictures(infrastructureAd, infrastructurePictures));
+        }
+
+        public bool ShouldSerializeIrrelevantDate()
+        {
+            return IsIrrelevant();
         }
 
         private IList<Picture> GetPicturesByInfrastructurePictures(IEnumerable<Infrastructure.Entities.Picture> getInfrastructurePictures)

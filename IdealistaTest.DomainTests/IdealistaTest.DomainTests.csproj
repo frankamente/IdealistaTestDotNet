@@ -71,6 +71,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\IdealistaControllerTests.cs" />
     <Compile Include="Domain\MarkFilters\MarkFilterTests.cs" />
     <Compile Include="Services\IdealistaServiceTests.cs" />
     <Compile Include="Infrastructure\FakeDatabaseExtend.cs" />

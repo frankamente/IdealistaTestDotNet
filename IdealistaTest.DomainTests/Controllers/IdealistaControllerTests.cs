@@ -3,6 +3,7 @@ using IdealistaTest.DomainTests.Infrastructure;
 using IdealistaTest.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using IdealistaTest.Services;
 
 namespace IdealistaTest.Controllers.Tests
 {
@@ -17,6 +18,7 @@ namespace IdealistaTest.Controllers.Tests
             fakeDatabaseInstance = FakeDatabase.Instance();
             new FakeDatabaseExtend().RestartFakeDatabaseInstance();
             fakeDatabaseInstance.InitializeDatabase(GetAdJsonFullPath(), GetPictureJsonFullPath());
+            new IdealistaService().MarkCalculation();
         }
 
         [TestMethod()]
@@ -36,7 +38,7 @@ namespace IdealistaTest.Controllers.Tests
         [TestMethod()]
         public void WhenApplicationUserThenShouldReturnOnlyRelevantAds()
         {
-            var relevantAds = FakeDatabase.Instance().GetOrderedAds().Count(x => !x.IsIrrelevant());
+            var relevantAds = FakeDatabase.Instance().GetOrderedAds().Count(x => x.Mark > 40);
             new IdealistaController().ApplicationUser().Should().HaveCount(relevantAds);
         }
 

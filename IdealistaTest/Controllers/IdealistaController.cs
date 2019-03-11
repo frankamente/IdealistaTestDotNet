@@ -1,7 +1,5 @@
-﻿using IdealistaTest.Infrastructure;
-using IdealistaTest.Services;
+﻿using IdealistaTest.Services;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
 
 namespace IdealistaTest.Controllers
@@ -13,22 +11,23 @@ namespace IdealistaTest.Controllers
         [HttpGet]
         public IEnumerable<Domain.Entities.Ad> MarkCalculation()
         {
-            new IdealistaService().MarkCalculation();
-            return FakeDatabase.Instance().GetOrderedAds();
+            var idealistaService = new IdealistaService();
+            idealistaService.MarkCalculation();
+            return idealistaService.GetQualityManagerAds();
         }
 
         [Route("qualityManager")]
         [HttpGet]
         public IEnumerable<Domain.Entities.Ad> QualityManager()
         {
-            return FakeDatabase.Instance().GetOrderedAds();
+            return new IdealistaService().GetQualityManagerAds();
         }
 
         [Route("applicationUser")]
         [HttpGet]
         public IEnumerable<Domain.Entities.Ad> ApplicationUser()
         {
-            return FakeDatabase.Instance().GetOrderedAds().Where(x => !x.IsIrrelevant());
+            return new IdealistaService().GetUserAds();
         }
     }
 }

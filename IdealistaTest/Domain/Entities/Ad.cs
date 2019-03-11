@@ -36,7 +36,7 @@ namespace IdealistaTest.Domain.Entities
 
         public bool ShouldSerializeIrrelevantDate()
         {
-            return IsIrrelevant();
+            return IsIrrelevant() && IsIrrelevantDateUpdated();
         }
 
         private IList<Picture> GetPicturesByInfrastructurePictures(IEnumerable<Infrastructure.Entities.Picture> getInfrastructurePictures)
@@ -64,6 +64,11 @@ namespace IdealistaTest.Domain.Entities
         public bool IsIrrelevant()
         {
             return Mark < IRRELEVANT_AD_MARK;
+        }
+
+        public bool IsIrrelevantDateUpdated()
+        {
+            return IrrelevantDate != DateTime.MinValue;
         }
 
         public override bool Equals(object obj)

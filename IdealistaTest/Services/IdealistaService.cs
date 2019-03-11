@@ -1,5 +1,9 @@
-﻿using IdealistaTest.Infrastructure;
+﻿using System;
+using IdealistaTest.Domain.Entities;
+using IdealistaTest.Infrastructure;
 using Microsoft.Ajax.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace IdealistaTest.Services
 {
@@ -7,7 +11,22 @@ namespace IdealistaTest.Services
     {
         public void MarkCalculation()
         {
-            FakeDatabase.Instance().GetOrderedAds().ForEach(x => x.CalculateMark());
+            GetOrderedAds().ForEach(x => x.CalculateMark());
+        }
+
+        public IEnumerable<Ad> GetQualityManagerAds()
+        {
+            return GetOrderedAds();
+        }
+
+        public IEnumerable<Ad> GetUserAds()
+        {
+            return GetOrderedAds().Where(x => !x.IsIrrelevant());
+        }
+
+        private IEnumerable<Ad> GetOrderedAds()
+        {
+            return FakeDatabase.Instance().GetOrderedAds();
         }
     }
 }
